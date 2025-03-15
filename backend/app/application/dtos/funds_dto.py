@@ -4,21 +4,21 @@ from uuid import UUID
 from datetime import datetime
 
 
-class UserCreateDTO(BaseModel):
+class FundCreateDTO(BaseModel):
     """DTO for fund creation"""
     name: str = Field(..., min_length=1, max_length=100)
     minimum_balance: float
     category: str
 
 
-class UserUpdateDTO(BaseModel):
+class FundUpdateDTO(BaseModel):
     """DTO for fund update"""
     name: Optional[str] = Field(None, min_length=1, max_length=100)
     minimum_balance: Optional[float]
     category: Optional[str]
 
 
-class UserResponseDTO(BaseModel):
+class FundResponseDTO(BaseModel):
     """DTO for fund response"""
     id: UUID
     name: str

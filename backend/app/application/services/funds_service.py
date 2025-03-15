@@ -28,5 +28,5 @@ class FundServiceImpl(FundService):
             raise EntityNotFoundException(f"Fund with id {fund_id} not found")
         return fund
 
-    async def get_funds(self) -> List[Fund]:
+    async def funds(self) -> List[Fund]:
         return await self.fund_repository.get_all()

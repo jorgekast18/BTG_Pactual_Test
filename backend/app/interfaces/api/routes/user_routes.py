@@ -48,16 +48,10 @@ async def get_user(
     summary="Get all users",
     description="Get a list of all users"
 )
-async def get_users(
-    user_service: Annotated[UserService, Depends(get_user_service)],
-    limit: Annotated[int, Query(description="Limit the number of results", ge=1)] = 100,
-    offset: Annotated[int, Query(description="Skip the first N results", ge=0)] = 0,
-):
+async def get_users(user_service: Annotated[UserService, Depends(get_user_service)]):
     """Get all users"""
     users = await user_service.get_users()
-    # Apply pagination manually
-    paginated_users = users[offset:offset + limit]
-    return paginated_users
+    return users
 
 
 @router.put(
