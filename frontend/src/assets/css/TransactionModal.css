@@ -1,0 +1,15 @@
+.title {
+    color: black;
+    font-weight: 600;
+}
+
+.description {
+    color: black;
+    font-weight: 400;
+}
+
+.min-value {
+    background-color: rgba(235, 235, 235, 0.192);
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
