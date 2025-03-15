@@ -6,7 +6,8 @@ from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorCollection
 
 from domain.models.user import User
-from domain.ports.repositories import UserRepository, Repository, T
+from domain.models.fund import Fund
+from domain.ports.repositories import UserRepository, FundRepository, Repository, T
 from infrastructure.db.db import get_database
 from interfaces.exceptions import EntityNotFoundException
 
@@ -86,3 +87,10 @@ class MongoDBUserRepository(MongoDBRepository[User], UserRepository):
             result["id"] = UUID(result.pop("_id"))
             return User(**result)
         return None
+
+
+class MongoDBFundRepository(MongoDBRepository[Fund], FundRepository):
+    """MongoDB fund repository implementation"""
+
+    def __init__(self):
+        super().__init__("funds", Fund)
