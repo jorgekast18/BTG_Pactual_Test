@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Optional, TypeVar, Generic
 from uuid import UUID
 from domain.models.user import User
+from domain.models.fund import Fund
 T = TypeVar('T')
 
 
@@ -39,3 +40,6 @@ class UserRepository(Repository["User"]):
     @abstractmethod
     async def get_by_document_id(self, document_id: str) -> Optional["User"]:
         pass
+
+class FundRepository(Repository["Fund"]):
+    """Funds repository interface"""
