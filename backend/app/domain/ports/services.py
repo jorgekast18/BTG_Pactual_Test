@@ -3,6 +3,7 @@ from typing import List, Optional
 from uuid import UUID
 
 from domain.models.user import User
+from domain.models.fund import Fund
 
 
 class UserService(ABC):
@@ -30,4 +31,20 @@ class UserService(ABC):
     
     @abstractmethod
     async def get_user_by_email(self, email: str) -> Optional[User]:
+        pass
+
+class FundService(ABC):
+    """Fund service interface"""
+
+    @abstractmethod
+    async def create_fund(self, fund_data: dict) -> Fund:
+        pass
+
+
+    @abstractmethod
+    async def funds(self) -> List[Fund]:
+        pass
+
+    @abstractmethod
+    async def get_fund_by_id(self, fund_id: UUID) -> Optional[Fund]:
         pass
