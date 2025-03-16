@@ -3,7 +3,7 @@ set -e
 
 # Variables
 AWS_REGION="us-east-1"  # Cambiar según tu región
-STACK_NAME="fullstack-app-stack"
+STACK_NAME="BTG-Pactual-Test-Stack"
 VPC_ID=$(aws secretsmanager get-secret-value --secret-id "/app/vpc-id" --query SecretString --output text)
 SUBNET_IDS=$(aws secretsmanager get-secret-value --secret-id "/app/subnet-ids" --query SecretString --output text)
 MONGO_USER=$(aws secretsmanager get-secret-value --secret-id "MONGO_USER" --query SecretString --output text)

@@ -29,7 +29,22 @@ Parameters:
     Type: String
     Default: frontend-repository-fullstack-app
     Description: Nombre del repositorio ECR para el frontend
+  
+  mongoUser:
+    Type: String
+    Default: mongo
+    Description: Nombre de usuario para la base de datos MongoDB
 
+  mongoPass:
+    Type: String
+    Default: mongo
+    Description: Pass de usuario para la base de datos MongoDB
+
+  mongoDbName:
+    Type: String
+    Default: mongo
+    Description: Nombre de la db
+    
 Resources:
   # Cluster de ECS
   ECSCluster:
@@ -180,6 +195,12 @@ Resources:
               Value: production
             - Name: AWS_REGION
               Value: !Ref AWS::Region
+            - Name: MONGO_USER
+              Value: !Ref mongoUser
+            - Name: MONGO_PASS
+              Value: !Ref mongoPass
+            - Name: MONGO_DB_NAME
+              Value: !Ref mongoDbName
 
   # Task Definition para el Frontend
   FrontendTaskDefinition:
