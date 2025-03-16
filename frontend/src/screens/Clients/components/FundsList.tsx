@@ -13,15 +13,15 @@ import { toast, ToastContainer } from 'react-toastify';
 import { Typography, IconButton } from '@mui/material';
 
 import ModalConfirmation from '../../../components/ConfirmationDialog';
-import { FUND_MODEL } from '@models';
+import { FUND_MODEL, SUBSCRIBE_FUND_MODEL, WITHDRAWAL_FUND_MODEL } from '@models';
 import { useFetchAndLoad } from "../../../hooks";
 import { getBalance } from '../../../utilities';
 import { useBalance } from '../../../context/BalanceContext';
 import { withdrawalFund, getFundsAvailable, subscribeFund } from '../../../services';
 import ModalTransaction from '../../../components/ModalTransaction';
 
-export default function FundsListByClient({ customerId, funds: initialFundsData }: { customerId: string, funds: FUND_MODEL[] }) {
-    const [fundsData, setFundsData] = useState<FUND_MODEL[]>([]);
+export default function FundsListByClient({ customerId, availableFunds, registeredFunds, callback }: { customerId: string, availableFunds: FUND_MODEL[], registeredFunds: FUND_MODEL[], callback: () => void }) {
+    const [registeredFundsList, setRegisteredFundsList] = useState<FUND_MODEL[]>([]);
     const [fundsAvailableData, setFundsAvailableData] = useState<FUND_MODEL[]>([]);
     const [modalData, setModalData] = useState({});
     const [modalDataSubscription, setModalDataSubscription] = useState({});
@@ -36,24 +36,23 @@ export default function FundsListByClient({ customerId, funds: initialFundsData 
         },
     };
 
-    const fetchFundsAvailable = async () => {
-        const response: [] = await callEndpoint(getFundsAvailable());
-        if (response.length > 0) {
-            const fundsAvailable: FUND_MODEL[] = response.filter((fund: any) => !fundsData.some(fundUsed => fundUsed._id === fund._id));
-            console.log('fundsAvailable', fundsAvailable)
-            setFundsAvailableData(fundsAvailable);  
-        }
-    };
-
     useEffect(() => {
-        setFundsData(initialFundsData);
-        fetchFundsAvailable();
-    }, [initialFundsData]);
+        setFundsAvailableData(availableFunds);
+        setRegisteredFundsList(registeredFunds);
+    }, []);
 
-    async function handleWithdrawalfund(fund: FUND_MODEL) {
+    async function handleWithdrawalfund(fund: any) {
         try {
-            const result = await callEndpoint(withdrawalFund(customerId, fund));
-            setFundsData(result.funds);
+            console.log('fund', fund);
+            const fundToWithdrawal: WITHDRAWAL_FUND_MODEL = {
+                id: fund.id,
+                name: fund.name,
+                minimum_balance: fund.minimum_balance,
+                category: fund.category
+            }
+            console.log('fundToWithdrawal', fundToWithdrawal);
+            await callEndpoint(withdrawalFund(customerId, fundToWithdrawal));
+            callback();
             const balance = await getBalance(customerId);
             setBalance(balance);
 
@@ -69,9 +68,15 @@ export default function FundsListByClient({ customerId, funds: initialFundsData 
         }
     }
 
-    async function handleSubscribefund(fund: FUND_MODEL) {
+    async function handleSubscribefund(fund: any) {
+        const fundToSubscribe: SUBSCRIBE_FUND_MODEL = {
+            id: fund.id,
+            name: fund.name,
+            minimum_balance: fund.minimum_balance,
+            category: fund.category
+        }
         try {
-            const subscribeResponse = await callEndpoint(subscribeFund(customerId, fund));
+            const subscribeResponse = await callEndpoint(subscribeFund(customerId, fundToSubscribe));
             if (subscribeResponse.error && subscribeResponse.error === 'Without Balance') {
                 toast.warning(`No tiene saldo disponible para vincularse al fondo. ${fund.name}`, {
                     position: "top-right",
@@ -80,8 +85,9 @@ export default function FundsListByClient({ customerId, funds: initialFundsData 
                 return;
             }
 
-            setFundsData(subscribeResponse.funds);
-            await fetchFundsAvailable();
+            callback();
+            const balance = await getBalance(customerId);
+            setBalance(balance);
 
             toast.success(`Se suscribió al fondo ${fund.name}`, {
                 position: "top-right",
@@ -129,13 +135,13 @@ export default function FundsListByClient({ customerId, funds: initialFundsData 
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {fundsData.map((fund) => (
+                        { registeredFunds && registeredFunds.length > 0 ? registeredFunds.map((fund) => (
                             <TableRow
                                 key={fund._id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell align="right">{fund.name}</TableCell>
-                                <TableCell align="right">${fund.minimum_amount.toLocaleString()}</TableCell>
+                                <TableCell align="right">${Number(fund.minimum_balance).toLocaleString()}</TableCell>
                                 <TableCell align="right">{fund.category}</TableCell>
                                 <TableCell align="right">{moment(fund.date).format('MMMM D YYYY')}</TableCell>
                                 <TableCell align="right">
@@ -148,7 +154,7 @@ export default function FundsListByClient({ customerId, funds: initialFundsData 
                                     </IconButton>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        )) : <h2>No hay fondos inscritos</h2>}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -172,13 +178,13 @@ export default function FundsListByClient({ customerId, funds: initialFundsData 
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {fundsAvailableData.map((fund) => (
+                        {availableFunds && availableFunds.length > 0 ? availableFunds.map((fund) => (
                             <TableRow
                                 key={fund._id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell align="right">{fund.name}</TableCell>
-                                <TableCell align="right">${fund.minimum_amount.toLocaleString()}</TableCell>
+                                <TableCell align="right">${Number(fund.minimum_balance).toLocaleString()}</TableCell>
                                 <TableCell align="right">{fund.category}</TableCell>
                                 <TableCell align="right">
                                     <IconButton 
@@ -190,7 +196,7 @@ export default function FundsListByClient({ customerId, funds: initialFundsData 
                                     </IconButton>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        )):  <h2>No hay fondos disponibles</h2>}
                     </TableBody>
                 </Table>
             </TableContainer>

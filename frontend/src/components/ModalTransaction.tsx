@@ -21,13 +21,13 @@ const ModalTransaction = ({ open, onClose, data, callback }: MODAL_TRANSACTION) 
     const [minValueFund, setMinValueFund] = useState(0);
 
     const handleSubmit = () => {
-        if(minValueFund !== 0 && minValueFund < data?.fund?.minimum_amount){
-            toast.warning(`El valor mínimo de suscripción para el fondo es de: ${data?.fund?.minimum_amount}`, {
+        if(minValueFund !== 0 && minValueFund < data?.fund?.minimum_balance){
+            toast.warning(`El valor mínimo de suscripción para el fondo es de: ${data?.fund?.minimum_balance}`, {
                 position: "top-right"
               });
               return;
-        }else if(minValueFund !== 0 && minValueFund >= data?.fund?.minimum_amount){
-            data.fund.minimum_amount = minValueFund;
+        }else if(minValueFund !== 0 && minValueFund >= data?.fund?.minimum_balance){
+            data.fund.minimum_balance = minValueFund;
         }
 
         callback(data?.fund);
@@ -55,19 +55,19 @@ const ModalTransaction = ({ open, onClose, data, callback }: MODAL_TRANSACTION) 
                         required
                         id='amount-fund'
                         label='Valor de inscripción'
-                        defaultValue={data?.fund?.minimum_amount}
+                        defaultValue={data?.fund?.minimum_balance}
                         error={hasErrorMinValue}
                         size='small'
                         type='number'
                         onChange={(event) => {
-                            setHasErrorMinValue(event.target.value < data?.fund?.minimum_amount)
+                            setHasErrorMinValue(event.target.value < data?.fund?.minimum_balance)
                             setMinValueFund(parseFloat(event.target.value));
                         }}
                     />
                 </div>
                 {
                     hasErrorMinValue &&
-                    <span style={{ color: "red"}}>El valor mínimo de inscripción es: {data?.fund?.minimum_amount}</span>
+                    <span style={{ color: "red"}}>El valor mínimo de inscripción es: {data?.fund?.minimum_balance}</span>
                 }
                 
             </Stack>   

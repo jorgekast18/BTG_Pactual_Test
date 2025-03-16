@@ -1,15 +1,22 @@
 export interface FUND_MODEL {
     _id: string;
     name: string;
-    minimum_amount: number;
+    minimum_balance: number;
     category: string;
     date?: string;
 
 }
 
 export interface SUBSCRIBE_FUND_MODEL {
-    fund_id: string;
-    customer_id: string;
-    amount: number;
-    type: string;
+    id: string;
+    name: string;
+    minimum_balance: number;
+    category: string;
+}
+
+export interface WITHDRAWAL_FUND_MODEL {
+    id: string;
+    name: string;
+    minimum_balance: number;
+    category: string;
 }

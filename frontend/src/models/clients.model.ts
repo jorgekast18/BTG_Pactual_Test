@@ -8,6 +8,7 @@ export interface CLIENT_MODEL {
     balance: number;
     email?: '';
     phone?: '';
-    funds?: FUND_MODEL[];
+    registeredFunds?: FUND_MODEL[];
+    availableFunds?: FUND_MODEL[];
     transactions?: TRANSACION_MODEL
 }

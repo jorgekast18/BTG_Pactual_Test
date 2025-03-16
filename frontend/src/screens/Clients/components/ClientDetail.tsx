@@ -17,6 +17,25 @@ function ClientDetail() {
   
   const { id } = useParams();
 
+  const fetchClients = async () => {
+    const response = await callEndpoint(getClientById(id));
+    console.log('API Response:', response);
+    const parseDataClient: CLIENT_MODEL = {
+      _id: response.id,
+      name: response.first_name,
+      surnames: response.last_name,
+      email: response.email,
+      balance: response.balance,
+      availableFunds: response.available_funds,
+      registeredFunds: response.registered_funds,
+      transactions: response.transactions
+    }
+    SetClientData(parseDataClient);
+    console.log('client Data --> ', clientData)
+  }
+  useEffect(() => { 
+    fetchClients();
+  }, [id])
   const styles = {
       container: {
         marginTop: 1,
@@ -60,17 +79,6 @@ function ClientDetail() {
       },
   };
 
-  useEffect(() => {
-
-      const fetchClients = async () => {
-        const response: CLIENT_MODEL = await callEndpoint(getClientById(id));
-          
-        console.log('response client --> ', response);
-        SetClientData(response);
-      }
-      
-      fetchClients();
-    }, [])
   
     return (
         <>
@@ -113,14 +121,13 @@ function ClientDetail() {
                     </CardContent>
                 </Card>
             </Container>
+
             <FundsListByClient
               customerId={id ? id : ''}
-              funds={clientData?.funds ? clientData?.funds : []}
+              availableFunds={clientData?.availableFunds ? clientData?.availableFunds : []}
+              registeredFunds={clientData?.registeredFunds ? clientData?.registeredFunds : []}
+              callback={fetchClients}
             />
-            <TransactionList
-              transactions={clientData?.transactions ? clientData?.transactions : []}
-            />
-
             
         </>
     );
