@@ -31,7 +31,6 @@ function ClientDetail() {
       transactions: response.transactions
     }
     SetClientData(parseDataClient);
-    console.log('client Data --> ', clientData)
   }
   useEffect(() => { 
     fetchClients();
@@ -39,7 +38,7 @@ function ClientDetail() {
   const styles = {
       container: {
         marginTop: 1,
-        marginBottom: 5
+        marginBottom: 5,
       },
       card: {
         maxWidth: 800,

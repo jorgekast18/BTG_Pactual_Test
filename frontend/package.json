@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build --debug",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^5.16.5",
     "@mui/material": "^5.16.5",
+    "@vitejs/plugin-react": "^4.3.4",
     "axios": "^1.7.2",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-ft-flow": "^3.0.11",

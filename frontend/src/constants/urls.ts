@@ -1,4 +1,4 @@
-const urlBase = 'http://127.0.0.1:8000/api/v1';
+const urlBase = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000/api/v1';
 
 // Customers
 export const getAllCustomersUrl = `${urlBase}/users`

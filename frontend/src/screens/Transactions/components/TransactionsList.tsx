@@ -28,8 +28,6 @@ export default function TransactionsList({transaction: transactionData}: {transa
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell align="right">{row.type}</TableCell>
-              <TableCell align="right">{row.fund.name}</TableCell>
-              <TableCell align="right">{row.customer.name}</TableCell>
               <TableCell align="right">{row.amount}</TableCell>
             </TableRow>
           ))}

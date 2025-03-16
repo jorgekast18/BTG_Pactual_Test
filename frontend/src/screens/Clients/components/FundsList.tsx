@@ -43,14 +43,12 @@ export default function FundsListByClient({ customerId, availableFunds, register
 
     async function handleWithdrawalfund(fund: any) {
         try {
-            console.log('fund', fund);
             const fundToWithdrawal: WITHDRAWAL_FUND_MODEL = {
                 id: fund.id,
                 name: fund.name,
                 minimum_balance: fund.minimum_balance,
                 category: fund.category
             }
-            console.log('fundToWithdrawal', fundToWithdrawal);
             await callEndpoint(withdrawalFund(customerId, fundToWithdrawal));
             callback();
             const balance = await getBalance(customerId);
