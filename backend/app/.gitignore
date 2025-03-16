@@ -1,0 +1,59 @@
+# Archivos de Python compilados
+*.pyc
+*.pyo
+__pycache__/
+
+# Archivos de entorno virtual
+venv/
+env/
+.venv/
+.env/
+
+# Archivos de configuración de IDEs (Visual Studio Code, PyCharm, etc.)
+.vscode/
+.idea/
+
+# Archivos de configuración de Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Archivos de base de datos
+*.sqlite3
+*.db
+
+# Archivos de logs
+*.log
+
+# Archivos temporales
+*.bak
+*.swp
+
+# Archivos de dependencias
+Pipfile.lock
+*.egg-info/
+*.egg
+
+# Archivos de configuración de Docker
+docker-compose.override.yml
+Dockerfile.*
+
+# Archivos de configuración de AWS
+*.pem
+*.key
+
+# Archivos de configuraciones locales
+*.env
+*.env.*
+
+# Archivos de compilación de Cython
+*.c
+*.so
+
+# Archivos generados por pytest
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+
+# Carpeta de dist y build
+dist/
+build/
