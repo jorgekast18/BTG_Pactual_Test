@@ -1,8 +1,6 @@
 from typing import List, Optional, Type, Generic
 from uuid import UUID
 from datetime import datetime
-
-from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorCollection
 
 from domain.models.user import User
@@ -19,7 +17,8 @@ class MongoDBRepository(Repository[T], Generic[T]):
         self.collection_name = collection_name
         self.model_class = model_class
         self._collection: AsyncIOMotorCollection = get_database()[collection_name]
-    
+
+
     async def create(self, entity: T) -> T:
         entity_dict = entity.model_dump()
         entity_dict["_id"] = str(entity_dict.pop("id"))

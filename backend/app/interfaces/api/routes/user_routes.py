@@ -3,6 +3,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, status, Path, Query
 
+from domain.models.fund import Fund
 from domain.ports.services import UserService
 from application.dtos.user_dto import UserCreateDTO, UserUpdateDTO, UserResponseDTO
 from interfaces.api.dependencies import get_user_service
@@ -23,6 +24,38 @@ async def create_user(
 ):
     """Create a new user"""
     user = await user_service.create_user(user_data.model_dump())
+    return user
+
+@router.post(
+    "/funds/subscribe/{user_id}",
+    response_model=UserResponseDTO,
+    status_code=status.HTTP_200_OK,
+    summary="Subscribe to funds",
+    description="Subscribe one user to fund by user id"
+)
+async def subscribe_fund(
+    user_id:  Annotated[UUID, Path(description="The ID of the user to get")],
+    fund_data: Fund,
+    user_service: Annotated[UserService, Depends(get_user_service)]
+):
+    """Subscribe a user to fund"""
+    user = await user_service.subscribe_to_fund(user_id, fund_data.model_dump())
+    return user
+
+@router.post(
+    "/funds/withdrawal/{user_id}",
+    response_model=UserResponseDTO,
+    status_code=status.HTTP_200_OK,
+    summary="Withdrawal to funds",
+    description="Withdrawal one user to fund by user id"
+)
+async def withdrawal_fund(
+    user_id:  Annotated[UUID, Path(description="The ID of the user to get")],
+    fund_data: Fund,
+    user_service: Annotated[UserService, Depends(get_user_service)]
+):
+    """Subscribe a user to fund"""
+    user = await user_service.withdrawal_fund(user_id, fund_data.model_dump())
     return user
 
 

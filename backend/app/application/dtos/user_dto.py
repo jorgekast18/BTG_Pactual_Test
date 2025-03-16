@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr
-from typing import Optional
+from typing import Optional, List, Dict
 from uuid import UUID
 from datetime import datetime
 
@@ -19,6 +19,8 @@ class UserUpdateDTO(BaseModel):
     first_name: Optional[str] = Field(None, min_length=1, max_length=50)
     last_name: Optional[str] = Field(None, min_length=1, max_length=50)
     is_active: Optional[bool] = None
+    registered_funds: List[Dict] = None
+    available_funds: List[Dict] = None
 
 
 class UserResponseDTO(BaseModel):
@@ -29,5 +31,7 @@ class UserResponseDTO(BaseModel):
     first_name: str
     last_name: str
     balance: float
+    registered_funds: List[Dict]
+    available_funds: List[Dict]
     created_at: datetime
     updated_at: Optional[datetime] = None

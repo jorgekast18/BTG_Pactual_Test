@@ -2,7 +2,6 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from application.dtos.user_dto import UserResponseDTO
 from config.settings import settings
 from interfaces.api.main import api_router
 from infrastructure.db.db import init_db, close_db

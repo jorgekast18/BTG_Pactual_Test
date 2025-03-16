@@ -33,6 +33,14 @@ class UserService(ABC):
     async def get_user_by_email(self, email: str) -> Optional[User]:
         pass
 
+    @abstractmethod
+    async def subscribe_to_fund(self, user_id: UUID, fund_data: dict) -> Optional[User]:
+        pass
+
+    @abstractmethod
+    async def withdrawal_fund(self, user_id: UUID, fund_data: dict) -> Optional[User]:
+        pass
+
 class FundService(ABC):
     """Fund service interface"""
 

@@ -19,10 +19,11 @@ def get_fund_repository() -> FundRepository:
 
 
 def get_user_service(
-    user_repository: Annotated[UserRepository, Depends(get_user_repository)]
+    user_repository: Annotated[UserRepository, Depends(get_user_repository)],
+    fund_repository: Annotated[FundRepository, Depends(get_fund_repository)]
 ) -> UserService:
     """Dependency for UserService"""
-    return UserServiceImpl(user_repository)
+    return UserServiceImpl(user_repository, fund_repository)
 
 def get_fund_service(
     fund_repository: Annotated[FundRepository, Depends(get_fund_repository)]
