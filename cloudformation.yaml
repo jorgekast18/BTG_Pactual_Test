@@ -20,6 +20,16 @@ Parameters:
     Default: 512
     Description: Memoria en MB para los contenedores
 
+  BackendRepositoryName:
+    Type: String
+    Default: backend-repository-fullstack-app
+    Description: Nombre del repositorio ECR para el backend
+
+  FrontendRepositoryName:
+    Type: String
+    Default: frontend-repository-fullstack-app
+    Description: Nombre del repositorio ECR para el frontend
+
 Resources:
   # Cluster de ECS
   ECSCluster:
@@ -39,17 +49,6 @@ Resources:
     Properties:
       LogGroupName: /ecs/frontend-service
       RetentionInDays: 30
-
-  # ECR Repositories
-  BackendRepository:
-    Type: AWS::ECR::Repository
-    Properties:
-      RepositoryName: backend-repository
-
-  FrontendRepository:
-    Type: AWS::ECR::Repository
-    Properties:
-      RepositoryName: frontend-repository
 
   # Security Group para ALB
   LoadBalancerSecurityGroup:
@@ -165,7 +164,8 @@ Resources:
       ExecutionRoleArn: !Ref ECSTaskExecutionRole
       ContainerDefinitions:
         - Name: backend-container
-          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${BackendRepository}:latest
+          # Usar el nombre del repositorio como parámetro
+          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${BackendRepositoryName}:latest
           Essential: true
           PortMappings:
             - ContainerPort: 8000
@@ -178,6 +178,8 @@ Resources:
           Environment:
             - Name: ENVIRONMENT
               Value: production
+            - Name: AWS_REGION
+              Value: !Ref AWS::Region
 
   # Task Definition para el Frontend
   FrontendTaskDefinition:
@@ -192,7 +194,8 @@ Resources:
       ExecutionRoleArn: !Ref ECSTaskExecutionRole
       ContainerDefinitions:
         - Name: frontend-container
-          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${FrontendRepository}:latest
+          # Usar el nombre del repositorio como parámetro
+          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${FrontendRepositoryName}:latest
           Essential: true
           PortMappings:
             - ContainerPort: 80
@@ -255,4 +258,4 @@ Outputs:
 
   BackendApiUrl:
     Description: URL para el API del Backend
-    Value: !Sub http://${ApplicationLoadBalancer.DNSName}/api/v1
+    Value: !Sub http://${ApplicationLoadBalancer.DNSName}/api
