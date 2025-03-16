@@ -26,10 +26,7 @@ class UserServiceImpl(UserService):
         document_id = user_data.get("document_id")
         
         if await self.user_repository.get_by_email(email):
-            raise ConflictException(f"User with email {email} already exists")
-            
-        if await self.user_repository.get_by_document_id(document_id):
-            raise ConflictException(f"User with document id {document_id} already exists")
+            raise ConflictException(f"El email {email} ya existe")
 
         # Set funds available
         available_funds = await self.fund_repository.get_all()
@@ -45,7 +42,7 @@ class UserServiceImpl(UserService):
     async def get_user_by_id(self, user_id: UUID) -> Optional[User]:
         user = await self.user_repository.get_by_id(user_id)
         if not user:
-            raise EntityNotFoundException(f"User with id {user_id} not found")
+            raise EntityNotFoundException(f"Usuario con id {user_id} no encontrado")
         return user
     
     async def get_users(self) -> List[User]:
@@ -59,12 +56,7 @@ class UserServiceImpl(UserService):
         if "email" in user_data and user_data["email"] != user.email:
             existing_user = await self.user_repository.get_by_email(user_data["email"])
             if existing_user and existing_user.id != user_id:
-                raise ConflictException(f"User with email {user_data['email']} already exists")
-        
-        if "document_id" in user_data and user_data["document_id"] != user.document_id:
-            existing_user = await self.user_repository.get_by_document_id(user_data["document_id"])
-            if existing_user and existing_user.id != user_id:
-                raise ConflictException(f"User with document id {user_data['document_id']} already exists")
+                raise ConflictException(f"El email {user_data['email']} ya existe")
         
         # Update user fields
         for key, value in user_data.items():
@@ -87,7 +79,7 @@ class UserServiceImpl(UserService):
     async def get_user_by_email(self, email: str) -> Optional[User]:
         user = await self.user_repository.get_by_email(email)
         if not user:
-            raise EntityNotFoundException(f"User with email {email} not found")
+            raise EntityNotFoundException(f"El email {email} no fue encontrado")
         return user
 
     async def subscribe_to_fund(self, user_id: UUID, fund_data: Fund) -> Optional[User]:
@@ -96,22 +88,22 @@ class UserServiceImpl(UserService):
 
         # Check if user exist
         if not user_in_db:
-            raise EntityNotFoundException(f"User with id {user_id} not found")
+            raise EntityNotFoundException(f"Usuario con id {user_id} no encontrado")
 
         # Check if fund id exist
         if not fund_id:
-            raise ConflictException(f"The fund id for {fund_data.name} is required")
+            raise ConflictException(f"El id para el fondo {fund_data.name} es obligatorio")
 
         fund_in_db = await self.fund_repository.get_by_id(fund_id)
 
         # Check if fund exist in db
         if not fund_in_db:
-            raise EntityNotFoundException(f"Fund with id {fund_id} not found")
+            raise EntityNotFoundException(f"Fondo con id {fund_id} no encontrado")
 
         new_user_balance = user_in_db.balance - fund_data['minimum_balance']
 
         if new_user_balance < 0:
-            raise ConflictException(f"Insufficient balance to subscribe to the fund {fund_data['name']}")
+            raise ConflictException(f"No tiene saldo disponible para vincularse al fondo {fund_data['name']}")
 
 
         # Add fund in registered funds
@@ -141,17 +133,17 @@ class UserServiceImpl(UserService):
 
         # Check if user exist
         if not user_in_db:
-            raise EntityNotFoundException(f"User with id {user_id} not found")
+            raise EntityNotFoundException(f"Usuario con id {user_id} no encontrado")
 
         # Check if fund id exist
         if not fund_id:
-            raise ConflictException(f"The fund id for {fund_data.name} is required")
+            raise ConflictException(f"El id para el fondo {fund_data.name} es obligatorio")
 
         fund_in_db = await self.fund_repository.get_by_id(fund_id)
 
         # Check if fund exist in db
         if not fund_in_db:
-            raise EntityNotFoundException(f"Fund with id {fund_id} not found")
+            raise EntityNotFoundException(f"Fondo con id {fund_id} no encontrado")
 
         new_user_balance = user_in_db.balance + fund_data['minimum_balance']
 

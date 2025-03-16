@@ -1,6 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 from config.settings import settings
 from interfaces.api.main import api_router
@@ -15,6 +16,18 @@ def create_app() -> FastAPI:
         version=settings.APP_VERSION,
         debug=settings.DEBUG,
     )
+
+    # Configuración de CORS
+    origins = [
+        "http://localhost:3000",  # URL de desarrollo del frontend
+    ]
+
+    # En producción, añadimos la URL del Load Balancer
+    if os.environ.get("ENVIRONMENT") == "production":
+        # Obtenemos la URL del ALB de las variables de entorno
+        alb_url = os.environ.get("ALB_URL", "")
+        if alb_url:
+            origins.append(alb_url)
     
     # Add CORS middleware
     app.add_middleware(
