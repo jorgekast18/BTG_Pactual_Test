@@ -37,13 +37,13 @@ echo "Iniciando sesión en ECR..."
 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $(echo $BACKEND_REPO_URI | cut -d'/' -f1)
 
 # Construir y subir la imagen del backend
-echo "Construyendo imagen del backend..."
-cd backend/app  # Directorio donde está el Dockerfile del backend
-docker build --platform linux/amd64 -t backend-image .
-docker tag backend-image:latest $BACKEND_REPO_URI:latest
-echo "Subiendo imagen del backend a ECR..."
-docker push $BACKEND_REPO_URI:latest
-cd ../..
+# echo "Construyendo imagen del backend..."
+# cd backend/app  # Directorio donde está el Dockerfile del backend
+# docker build --platform linux/amd64 -t backend-image .
+# docker tag backend-image:latest $BACKEND_REPO_URI:latest
+# echo "Subiendo imagen del backend a ECR..."
+# docker push $BACKEND_REPO_URI:latest
+# cd ../..
 
 # Construir y subir la imagen del frontend
 # echo "Construyendo imagen del frontend..."
@@ -55,23 +55,23 @@ cd ../..
 # cd ..
 
 # Desplegar con CloudFormation
-echo "Desplegando infraestructura con CloudFormation..."
-aws cloudformation deploy \
-  --template-file cloudformation.yaml \
-  --stack-name $STACK_NAME \
-  --capabilities CAPABILITY_IAM \
-  --parameter-overrides \
-    VpcId=$VPC_ID \
-    SubnetIds=$SUBNET_IDS \
-    BackendRepositoryName=$BACKEND_REPO_NAME \
-    FrontendRepositoryName=$FRONTEND_REPO_NAME \
-    mongoUser=$MONGO_USER \
-    mongoPass=$MONGO_PASS \
-    mongoDbName=$MONGO_DB_NAME 
+# echo "Desplegando infraestructura con CloudFormation..."
+# aws cloudformation deploy \
+#   --template-file cloudformation.yaml \
+#   --stack-name $STACK_NAME \
+#   --capabilities CAPABILITY_IAM \
+#   --parameter-overrides \
+#     VpcId=$VPC_ID \
+#     SubnetIds=$SUBNET_IDS \
+#     BackendRepositoryName=$BACKEND_REPO_NAME \
+#     FrontendRepositoryName=$FRONTEND_REPO_NAME \
+#     mongoUser=$MONGO_USER \
+#     mongoPass=$MONGO_PASS \
+#     mongoDbName=$MONGO_DB_NAME 
 
 # Obtener salidas de CloudFormation
 ALB_URL=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='LoadBalancerUrl'].OutputValue" --output text --region $AWS_REGION)
-DYNAMODB_TABLE=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='DynamoDBTableName'].OutputValue" --output text --region $AWS_REGION)
+
 
 echo "====================================================="
 echo "Despliegue completado!"
