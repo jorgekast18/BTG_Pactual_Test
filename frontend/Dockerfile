@@ -15,7 +15,7 @@ RUN npm ci
 COPY . .
 
 # Ejecutar la construcción
-RUN npm run build --verbose
+RUN npm run build
 
 # Etapa de producción
 FROM nginx:alpine
