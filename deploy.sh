@@ -46,13 +46,13 @@ docker push $BACKEND_REPO_URI:latest
 cd ../..
 
 # Construir y subir la imagen del frontend
-echo "Construyendo imagen del frontend..."
-cd frontend  # Directorio donde está el Dockerfile del frontend
-docker build --platform linux/amd64 -t frontend-image .
-docker tag frontend-image:latest $FRONTEND_REPO_URI:latest
-echo "Subiendo imagen del frontend a ECR..."
-docker push $FRONTEND_REPO_URI:latest
-cd ..
+# echo "Construyendo imagen del frontend..."
+# cd frontend  # Directorio donde está el Dockerfile del frontend
+# docker build --platform linux/amd64 -t frontend-image .
+# docker tag frontend-image:latest $FRONTEND_REPO_URI:latest
+# echo "Subiendo imagen del frontend a ECR..."
+# docker push $FRONTEND_REPO_URI:latest
+# cd ..
 
 # Desplegar con CloudFormation
 echo "Desplegando infraestructura con CloudFormation..."
